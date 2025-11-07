@@ -1,2 +1,3 @@
 # frontend-edu
+Firstly setting up the html file and css which will connect to the app.js 
 A vue.js application to keep track of classes, purchases...
