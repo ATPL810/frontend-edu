@@ -1,4 +1,4 @@
-// Main Vue Application - Everything in one file
+// Main Vue Application with proper directives
 const app = new Vue({
     el: '#app',
     data: {
@@ -20,13 +20,15 @@ const app = new Vue({
         },
         orderSubmitted: false,
         isLoading: true,
-        backendUrl: 'https://your-backend-app.onrender.com' // Update with your backend URL
+        backendUrl: 'https://your-backend-app.onrender.com'
     },
     
     computed: {
         // Sort lessons based on selected criteria
         sortedLessons() {
-            const lessonsToSort = this.searchQuery ? this.searchResults : this.lessons;
+            const lessonsToSort = this.searchQuery && this.searchResults.length > 0 
+                ? this.searchResults 
+                : this.lessons;
             
             return [...lessonsToSort].sort((a, b) => {
                 let aValue = a[this.sortBy];
@@ -44,6 +46,11 @@ const app = new Vue({
                     return aValue < bValue ? 1 : -1;
                 }
             });
+        },
+        
+        // Displayed lessons (for counting)
+        displayedLessons() {
+            return this.sortedLessons;
         },
         
         // Calculate total cart price
@@ -117,7 +124,7 @@ const app = new Vue({
             }
         },
         
-        // Add lesson to cart
+        // Add lesson to cart with v-on
         addToCart(lesson) {
             if (lesson.spaces > 0) {
                 this.cart.push({
@@ -129,7 +136,7 @@ const app = new Vue({
             }
         },
         
-        // Remove item from cart
+        // Remove item from cart with v-on
         removeFromCart(cartId) {
             const index = this.cart.findIndex(item => item.cartId === cartId);
             if (index !== -1) {
@@ -213,238 +220,10 @@ const app = new Vue({
         validateForm() {
             this.formErrors.name = /^[A-Za-z\s]+$/.test(this.checkoutData.name) ? '' : 'Name must contain only letters';
             this.formErrors.phone = /^\d+$/.test(this.checkoutData.phone) ? '' : 'Phone must contain only numbers';
-        },
-        
-        // Render functions for Vue without templates
-        render(createElement) {
-            return createElement('div', { class: 'container' }, [
-                this.renderHeader(createElement),
-                this.renderNavigation(createElement),
-                this.renderMainContent(createElement)
-            ]);
-        },
-        
-        renderHeader(createElement) {
-            return createElement('div', { class: 'header' }, [
-                createElement('h1', '🎵 Music Lesson Booking'),
-                createElement('p', 'Book your favorite music lessons online!')
-            ]);
-        },
-        
-        renderNavigation(createElement) {
-            return createElement('div', { class: 'navigation' }, [
-                createElement('div', { class: 'nav-buttons' }, [
-                    createElement('button', {
-                        class: ['nav-btn', this.currentView === 'lessons' ? 'active' : ''],
-                        on: { click: () => this.navigateTo('lessons') }
-                    }, ' Lessons'),
-                    createElement('button', {
-                        class: ['nav-btn', this.currentView === 'cart' ? 'active' : ''],
-                        attrs: { disabled: this.cart.length === 0 },
-                        on: { click: () => this.navigateTo('cart') }
-                    }, `Cart (${this.cart.length})`)
-                ]),
-                createElement('div', { class: 'search-sort-container' }, [
-                    createElement('input', {
-                        class: 'search-box',
-                        attrs: {
-                            type: 'text',
-                            placeholder: 'Search lessons...'
-                        },
-                        domProps: { value: this.searchQuery },
-                        on: {
-                            input: (e) => {
-                                this.searchQuery = e.target.value;
-                                this.handleSearch();
-                            }
-                        }
-                    }),
-                    createElement('div', { class: 'sort-controls' }, [
-                        createElement('select', {
-                            domProps: { value: this.sortBy },
-                            on: { change: (e) => this.sortBy = e.target.value }
-                        }, [
-                            createElement('option', { attrs: { value: 'subject' } }, 'Subject'),
-                            createElement('option', { attrs: { value: 'location' } }, 'Location'),
-                            createElement('option', { attrs: { value: 'price' } }, 'Price'),
-                            createElement('option', { attrs: { value: 'spaces' } }, 'Spaces')
-                        ]),
-                        createElement('button', {
-                            class: 'order-btn',
-                            on: { click: this.toggleSortOrder }
-                        }, this.sortOrder === 'asc' ? '↑ Asc' : '↓ Desc')
-                    ])
-                ])
-            ]);
-        },
-        
-        renderMainContent(createElement) {
-            if (this.isLoading && this.currentView === 'lessons') {
-                return createElement('div', { class: 'main-content' }, [
-                    createElement('div', { class: 'loading' }, 'Loading lessons...')
-                ]);
-            }
-            
-            let content;
-            switch (this.currentView) {
-                case 'lessons':
-                    content = this.renderLessonsView(createElement);
-                    break;
-                case 'cart':
-                    content = this.renderCartView(createElement);
-                    break;
-                default:
-                    content = createElement('div', 'Page not found');
-            }
-            
-            return createElement('div', { class: 'main-content' }, [content]);
-        },
-        
-        renderLessonsView(createElement) {
-            const lessonsToShow = this.sortedLessons;
-            
-            return createElement('div', [
-                createElement('h2', `Available Lessons (${lessonsToShow.length})`),
-                lessonsToShow.length === 0 
-                    ? createElement('p', { class: 'empty-state' }, 'No lessons found')
-                    : createElement('div', { class: 'lesson-grid' }, 
-                        lessonsToShow.map(lesson => this.renderLessonCard(createElement, lesson))
-                    )
-            ]);
-        },
-        
-        renderLessonCard(createElement, lesson) {
-            return createElement('div', { class: 'lesson-card' }, [
-                createElement('div', { class: 'lesson-icon' }, [
-                    createElement('i', { class: `fas ${lesson.icon}` })
-                ]),
-                createElement('h3', { class: 'lesson-subject' }, lesson.subject),
-                createElement('div', { class: 'lesson-detail' }, [
-                    createElement('i', { class: 'fas fa-map-marker-alt' }),
-                    createElement('span', `Location: ${lesson.location}`)
-                ]),
-                createElement('div', { class: 'lesson-detail' }, [
-                    createElement('i', { class: 'fas fa-pound-sign' }),
-                    createElement('span', `Price: £${lesson.price}`)
-                ]),
-                createElement('div', { class: 'lesson-detail' }, [
-                    createElement('i', { class: 'fas fa-users' }),
-                    createElement('span', `Spaces: ${lesson.spaces}`)
-                ]),
-                createElement('button', {
-                    class: 'add-to-cart-btn',
-                    attrs: { disabled: lesson.spaces === 0 },
-                    on: { click: () => this.addToCart(lesson) }
-                }, lesson.spaces === 0 ? 'Sold Out' : 'Add to Cart')
-            ]);
-        },
-        
-        renderCartView(createElement) {
-            return createElement('div', [
-                createElement('h2', 'Your Shopping Cart'),
-                this.cart.length === 0 
-                    ? createElement('p', { class: 'empty-state' }, 'Your cart is empty')
-                    : [
-                        createElement('div', { class: 'cart-container' },
-                            this.cart.map(item => 
-                                createElement('div', { class: 'cart-item' }, [
-                                    createElement('div', { class: 'cart-item-info' }, [
-                                        createElement('div', { style: 'font-weight: bold;' }, item.subject),
-                                        createElement('div', `Location: ${item.location} - £${item.price}`)
-                                    ]),
-                                    createElement('button', {
-                                        class: 'remove-btn',
-                                        on: { click: () => this.removeFromCart(item.cartId) }
-                                    }, 'Remove')
-                                ])
-                            )
-                        ),
-                        createElement('div', { class: 'total-section' }, 
-                            `Total: £${this.cartTotal}`
-                        ),
-                        this.renderCheckoutForm(createElement)
-                    ]
-            ]);
-        },
-        
-        renderCheckoutForm(createElement) {
-            if (this.orderSubmitted) {
-                return createElement('div', { class: 'confirmation-message' }, [
-                    createElement('h3', ' Order Submitted Successfully!'),
-                    createElement('p', 'Thank you for your order. You will be redirected to lessons page shortly.')
-                ]);
-            }
-            
-            return createElement('div', { class: 'checkout-form' }, [
-                createElement('h3', 'Checkout Information'),
-                createElement('div', { class: 'form-group' }, [
-                    createElement('label', { attrs: { for: 'name' } }, 'Full Name *'),
-                    createElement('input', {
-                        class: ['form-control', this.formErrors.name ? 'error' : ''],
-                        attrs: {
-                            type: 'text',
-                            id: 'name',
-                            placeholder: 'Enter your full name'
-                        },
-                        domProps: { value: this.checkoutData.name },
-                        on: {
-                            input: (e) => {
-                                this.checkoutData.name = e.target.value;
-                                this.validateForm();
-                            }
-                        }
-                    }),
-                    this.formErrors.name && createElement('div', { class: 'error-message' }, this.formErrors.name)
-                ]),
-                createElement('div', { class: 'form-group' }, [
-                    createElement('label', { attrs: { for: 'phone' } }, 'Phone Number *'),
-                    createElement('input', {
-                        class: ['form-control', this.formErrors.phone ? 'error' : ''],
-                        attrs: {
-                            type: 'tel',
-                            id: 'phone',
-                            placeholder: 'Enter your phone number'
-                        },
-                        domProps: { value: this.checkoutData.phone },
-                        on: {
-                            input: (e) => {
-                                this.checkoutData.phone = e.target.value;
-                                this.validateForm();
-                            }
-                        }
-                    }),
-                    this.formErrors.phone && createElement('div', { class: 'error-message' }, this.formErrors.phone)
-                ]),
-                createElement('div', { class: 'form-group' }, [
-                    createElement('label', { attrs: { for: 'email' } }, 'Email Address'),
-                    createElement('input', {
-                        class: 'form-control',
-                        attrs: {
-                            type: 'email',
-                            id: 'email',
-                            placeholder: 'Enter your email (optional)'
-                        },
-                        domProps: { value: this.checkoutData.email },
-                        on: {
-                            input: (e) => this.checkoutData.email = e.target.value
-                        }
-                    })
-                ]),
-                createElement('button', {
-                    class: 'checkout-btn',
-                    attrs: { disabled: !this.isCheckoutValid },
-                    on: { click: this.submitOrder }
-                }, `Place Order - £${this.cartTotal}`)
-            ]);
         }
     },
     
-    mounted() {
+    mounted() { 
         this.fetchLessons();
-        
-        // Search as you type
-        this.$watch('searchQuery', (newVal) => {
-            this.handleSearch();
-        });
     }
 });

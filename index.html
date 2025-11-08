@@ -9,7 +9,195 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <!-- Header -->
+        <div class="container">
+            <div class="header">
+                <h1>Music Lesson Booking</h1>
+                <p>Book your favorite music lessons online!</p>
+            </div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <div class="nav-buttons">
+                    <button 
+                        class="nav-btn" 
+                        :class="{ active: currentView === 'lessons' }"
+                        v-on:click="navigateTo('lessons')">
+                        Lessons
+                    </button>
+                    <button 
+                        class="nav-btn" 
+                        :class="{ active: currentView === 'cart' }"
+                        v-on:click="navigateTo('cart')"
+                        :disabled="cart.length === 0">
+                        Cart ({{ cart.length }})
+                    </button>
+                </div>
+
+                <div class="search-sort-container">
+                    <input 
+                        type="text" 
+                        class="search-box" 
+                        placeholder="Search lessons..."
+                        v-model="searchQuery"
+                        v-on:input="handleSearch">
+
+                    <div class="sort-controls">
+                        <select class="sort-select" v-model="sortBy" title="Sort lessons by">
+                            <option value="subject">Subject</option>
+                            <option value="location">Location</option>
+                            <option value="price">Price</option>
+                            <option value="spaces">Spaces</option>
+                        </select>
+                        <button class="order-btn" v-on:click="toggleSortOrder">
+                            {{ sortOrder === 'asc' ? 'Asc' : 'Desc' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Loading State -->
+                <div v-if="isLoading && currentView === 'lessons'" class="loading">
+                    Loading lessons...
+                </div>
+
+                <!-- Lessons View -->
+                <div v-else-if="currentView === 'lessons'">
+                    <h2>Available Lessons ({{ displayedLessons.length }})</h2>
+                    
+                    <div v-if="displayedLessons.length === 0" class="empty-state">
+                        No lessons found
+                    </div>
+
+                    <div v-else class="lesson-grid">
+                        <!-- v-for for lesson list display -->
+                        <div v-for="lesson in displayedLessons" :key="lesson.id" class="lesson-card">
+                            <div class="lesson-icon">
+                                <i :class="'fas ' + lesson.icon"></i>
+                            </div>
+                            <h3 class="lesson-subject">{{ lesson.subject }}</h3>
+                            
+                            <div class="lesson-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Location: {{ lesson.location }}</span>
+                            </div>
+                            
+                            <div class="lesson-detail">
+                                <i class="fas fa-pound-sign"></i>
+                                <span>Price: ${{ lesson.price }}</span>
+                            </div>
+                            
+                            <div class="lesson-detail">
+                                <i class="fas fa-users"></i>
+                                <span>Spaces: {{ lesson.spaces }}</span>
+                            </div>
+
+                            <!-- Add to Cart Button with v-on -->
+                            <button 
+                                class="add-to-cart-btn"
+                                v-on:click="addToCart(lesson)"
+                                :disabled="lesson.spaces === 0">
+                                {{ lesson.spaces === 0 ? 'Sold Out' : 'Add to Cart' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart View -->
+                <div v-else-if="currentView === 'cart'">
+                    <h2>Your Shopping Cart</h2>
+                    
+                    <div v-if="cart.length === 0" class="empty-state">
+                        Your cart is empty
+                    </div>
+
+                    <div v-else>
+                        <div class="cart-container">
+                            <!-- v-for for cart items -->
+                            <div v-for="(item, index) in cart" :key="item.cartId" class="cart-item">
+                                <div class="cart-item-info">
+                                    <div style="font-weight: bold;">{{ item.subject }}</div>
+                                    <div>Location: {{ item.location }} - ${{ item.price }}</div>
+                                </div>
+                                <button 
+                                    class="remove-btn" 
+                                    v-on:click="removeFromCart(item.cartId)">
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="total-section">
+                            Total: ${{ cartTotal }}
+                        </div>
+
+                        <!-- Checkout Form -->
+                        <div class="checkout-form">
+                            <h3>Checkout Information</h3>
+                            
+                            <div v-if="orderSubmitted" class="confirmation-message">
+                                <h3>Order Submitted Successfully!</h3>
+                                <p>Thank you for your order. You will be redirected to lessons page shortly.</p>
+                            </div>
+
+                            <div v-else>
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <input 
+                                        type="text" 
+                                        id="name"
+                                        class="form-control"
+                                        :class="{ error: formErrors.name }"
+                                        placeholder="Enter your full name"
+                                        v-model="checkoutData.name"
+                                        v-on:input="validateForm">
+                                    <div v-if="formErrors.name" class="error-message">
+                                        {{ formErrors.name }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone">Phone Number *</label>
+                                    <input 
+                                        type="tel" 
+                                        id="phone"
+                                        class="form-control"
+                                        :class="{ error: formErrors.phone }"
+                                        placeholder="Enter your phone number"
+                                        v-model="checkoutData.phone"
+                                        v-on:input="validateForm">
+                                    <div v-if="formErrors.phone" class="error-message">
+                                        {{ formErrors.phone }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input 
+                                        type="email" 
+                                        id="email"
+                                        class="form-control"
+                                        placeholder="Enter your email (optional)"
+                                        v-model="checkoutData.email">
+                                </div>
+
+                                <button 
+                                    class="checkout-btn"
+                                    v-on:click="submitOrder"
+                                    :disabled="!isCheckoutValid">
+                                    Place Order - ${{ cartTotal }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
