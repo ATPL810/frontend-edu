@@ -80,7 +80,7 @@ const app = new Vue({
             } catch (error) {
                 console.error('Error fetching lessons:', error);
                 // Fallback data for demo
-                //this.lessons = this.getDemoLessons();
+                this.lessons = this.getDemoLessons();
             } finally {
                 this.isLoading = false;
             }
