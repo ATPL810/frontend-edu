@@ -1,4 +1,3 @@
-// Main Vue Application with proper directives
 const app = new Vue({
     el: '#app',
     data: {
@@ -20,7 +19,7 @@ const app = new Vue({
         },
         orderSubmitted: false,
         isLoading: true,
-        backendUrl: 'https://your-backend-app.onrender.com'
+        backendUrl: 'https://your-backend-app.onrender.com' // Update with your backend URL
     },
     
     computed: {
@@ -79,14 +78,13 @@ const app = new Vue({
                 }));
             } catch (error) {
                 console.error('Error fetching lessons:', error);
-                // Fallback data for demo
                 this.lessons = this.getDemoLessons();
+                //alert('Error loading courses. Please check if backend is running.');
             } finally {
                 this.isLoading = false;
             }
         },
-        
-        // Demo data in case backend is not available
+
         getDemoLessons() {
             return [
                 { id: '1', subject: 'Piano', location: 'London', price: 50, spaces: 5, icon: 'fa-music' },
@@ -153,13 +151,17 @@ const app = new Vue({
         // Update lesson spaces in backend
         async updateLessonSpaces(lessonId, newSpaces) {
             try {
-                await fetch(`${this.backendUrl}/api/lessons/${lessonId}`, {
+                const response = await fetch(`${this.backendUrl}/api/lessons/${lessonId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ spaces: newSpaces })
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update spaces');
+                }
             } catch (error) {
                 console.error('Error updating spaces:', error);
             }
@@ -198,6 +200,7 @@ const app = new Vue({
                     setTimeout(() => {
                         this.orderSubmitted = false;
                         this.navigateTo('lessons');
+                        this.fetchLessons(); // Refresh to get updated spaces
                     }, 3000);
                 }
             } catch (error) {
@@ -223,7 +226,7 @@ const app = new Vue({
         }
     },
     
-    mounted() { 
+    mounted() {
         this.fetchLessons();
     }
 });
