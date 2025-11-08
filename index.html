@@ -71,10 +71,10 @@
 
                     <div v-else class="lesson-grid">
                         <div v-for="lesson in displayedLessons" :key="lesson.id" class="lesson-card">
-                            <!-- Course Image -->
+                            <!-- Course Image being dynamically served from backend -->
                             <div class="lesson-image">
                                 <img 
-                                    :src="backendUrl + '/images/' + lesson.image" 
+                                    :src="lesson.imageUrl" 
                                     :alt="lesson.subject"
                                     :title="lesson.subject + ' course image'"
                                     :onerror="`this.src='${backendUrl}/images/default.jpg'`">
@@ -97,10 +97,10 @@
                                 <span>Spaces: {{ lesson.spaces }}</span>
                             </div>
 
-                            <!-- <div class="lesson-detail">
+                            <div class="lesson-detail">
                                 <i class="fas fa-info-circle"></i>
                                 <span class="description">{{ lesson.description }}</span>
-                            </div> -->
+                            </div>
 
                             <button 
                                 class="add-to-cart-btn"
@@ -123,9 +123,10 @@
                     <div v-else>
                         <div class="cart-container">
                             <div v-for="(item, index) in cart" :key="item.cartId" class="cart-item">
+                                <!-- Dynamically returns the image in the cart -->
                                 <div class="cart-item-image">
                                     <img 
-                                        :src="backendUrl + '/images/' + item.image" 
+                                        :src="item.imageUrl" 
                                         :alt="item.subject">
                                 </div>
                                 <div class="cart-item-info">
