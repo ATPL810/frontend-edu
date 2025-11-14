@@ -19,7 +19,7 @@ const app = new Vue({
         },
         orderSubmitted: false,
         isLoading: true,
-        backendUrl: 'https://your-backend-app.onrender.com' // Update with your backend URL
+        backendUrl: 'https://api-bookings-9zu0.onrender.com/' // Update with backend URL
     },
     
     computed: {
@@ -78,7 +78,8 @@ const app = new Vue({
                 }));
             } catch (error) {
                 console.error('Error fetching lessons:', error);
-                this.lessons = this.getDemoLessons();
+                //temporarily displaying backend not working
+                // this.lessons = this.getDemoLessons();
                 //alert('Error loading courses. Please check if backend is running.');
             } finally {
                 this.isLoading = false;
