@@ -19,7 +19,7 @@ const app = new Vue({
         },
         orderSubmitted: false,
         isLoading: true,
-        backendUrl: 'https://api-bookings-9zu0.onrender.com/' // Update with backend URL
+        backendUrl: 'https://api-bookings-9zu0.onrender.com' // Update with backend URL
     },
     
     computed: {
