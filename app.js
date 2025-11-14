@@ -51,10 +51,14 @@ const app = new Vue({
         displayedLessons() {
             return this.sortedLessons;
         },
+
+        totalItems() {
+            return this.cart.reduce((total, item) => total + item.quantity, 0);
+        },
         
-        // Calculate total cart price
+        // Calculates the total cart price including quantities
         cartTotal() {
-            return this.cart.reduce((total, item) => total + item.price, 0);
+            return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
         },
         
         // Check if checkout form is valid
@@ -106,15 +110,29 @@ const app = new Vue({
             }
         },
         
-        // Add lesson to cart with v-on
+        // Adds lesson to cart with v-on
         addToCart(lesson) {
             if (lesson.spaces > 0) {
-                this.cart.push({
-                    ...lesson,
-                    cartId: Date.now() + Math.random()
-                });
-                this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
-                lesson.spaces--;
+                // Checks if the lesson already exists in cart
+                const existingItem = this.cart.find(item => item.id === lesson.id);
+                
+                if (existingItem) {
+                    // Increases the quantity if already in cart
+                    if (lesson.spaces > 0) {
+                        existingItem.quantity += 1;
+                        this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
+                        lesson.spaces--;
+                    }
+                } else {
+                    // Adds new item to cart with quantity 1
+                    this.cart.push({
+                        ...lesson,
+                        quantity: 1,  
+                        cartId: Date.now() + Math.random()
+                    });
+                    this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
+                    lesson.spaces--;
+                }
             }
         },
         
@@ -124,9 +142,11 @@ const app = new Vue({
             if (index !== -1) {
                 const cartItem = this.cart[index];
                 const lesson = this.lessons.find(l => l.id === cartItem.id);
+                
                 if (lesson) {
-                    this.updateLessonSpaces(lesson.id, lesson.spaces + 1);
-                    lesson.spaces++;
+                    // Return ALL quantities back to available spaces
+                    this.updateLessonSpaces(lesson.id, lesson.spaces + cartItem.quantity);
+                    lesson.spaces += cartItem.quantity;
                 }
                 this.cart.splice(index, 1);
             }
@@ -161,9 +181,11 @@ const app = new Vue({
                     phone: this.checkoutData.phone,
                     email: this.checkoutData.email,
                     lessons: this.cart.map(item => ({
-                        lessonId: item.id,
+                        lessonId: item._id || item.id,
                         subject: item.subject,
-                        price: item.price
+                        price: item.price,
+                        image: item.image,
+                        quantity: item.quantity
                     })),
                     total: this.cartTotal,
                     orderDate: new Date().toISOString()
@@ -177,16 +199,24 @@ const app = new Vue({
                     body: JSON.stringify(orderData)
                 });
                 
-                if (response.ok) {
-                    this.orderSubmitted = true;
-                    this.cart = [];
-                    this.checkoutData = { name: '', phone: '', email: '' };
-                    setTimeout(() => {
-                        this.orderSubmitted = false;
-                        this.navigateTo('lessons');
-                        this.fetchLessons(); // Refresh to get updated spaces
-                    }, 3000);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP ${response.status}`);
                 }
+
+                const result = await response.json();
+                console.log('Order successful:', result);
+
+                // Success handling
+                this.orderSubmitted = true;
+                this.cart = [];
+                this.checkoutData = { name: '', phone: '', email: '' };
+                
+                setTimeout(() => {
+                    this.orderSubmitted = false;
+                    this.navigateTo('lessons');
+                    this.fetchLessons(); // Refresh to see updated spaces
+                }, 3000);
             } catch (error) {
                 console.error('Error submitting order:', error);
                 alert('Error submitting order. Please try again.');

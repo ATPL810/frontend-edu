@@ -19,12 +19,14 @@
 
             <div class="navigation">
                 <div class="nav-buttons">
+                    // lessons view button
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'lessons' }"
                         v-on:click="navigateTo('lessons')">
                         Courses
                     </button>
+                    //shows the number of items in the cart
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'cart' }"
@@ -112,7 +114,7 @@
                     </div>
                 </div>
 
-                <!-- Cart View (same as before) -->
+                <!-- Cart View -->
                 <div v-else-if="currentView === 'cart'">
                     <h2>Your Shopping Cart</h2>
                     
@@ -125,17 +127,15 @@
                             <div v-for="(item, index) in cart" :key="item.cartId" class="cart-item">
                                 <!-- Dynamically returns the image in the cart -->
                                 <div class="cart-item-image">
-                                    <img 
-                                        :src="item.imageUrl" 
-                                        :alt="item.subject">
+                                    <img :src="item.imageUrl"  alt="item.subject">
                                 </div>
                                 <div class="cart-item-info">
                                     <div style="font-weight: bold;">{{ item.subject }}</div>
                                     <div>Location: {{ item.location }} - ${{ item.price }}</div>
+                                    <div>Quantity: {{ item.quantity }}</div> <!-- ← Show quantity -->
+                                    <div>Subtotal: ${{ item.price * item.quantity }}</div>
                                 </div>
-                                <button 
-                                    class="remove-btn" 
-                                    v-on:click="removeFromCart(item.cartId)">
+                                <button class="remove-btn" v-on:click="removeFromCart(item.cartId)">
                                     Remove
                                 </button>
                             </div>
