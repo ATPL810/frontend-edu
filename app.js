@@ -78,27 +78,10 @@ const app = new Vue({
                 }));
             } catch (error) {
                 console.error('Error fetching lessons:', error);
-                //temporarily displaying backend not working
-                // this.lessons = this.getDemoLessons();
-                //alert('Error loading courses. Please check if backend is running.');
+                alert('Error loading courses. Please check if backend is running.');
             } finally {
                 this.isLoading = false;
             }
-        },
-
-        getDemoLessons() {
-            return [
-                { id: '1', subject: 'Piano', location: 'London', price: 50, spaces: 5, icon: 'fa-music' },
-                { id: '2', subject: 'Guitar', location: 'Manchester', price: 40, spaces: 5, icon: 'fa-guitar' },
-                { id: '3', subject: 'Violin', location: 'Birmingham', price: 45, spaces: 5, icon: 'fa-violin' },
-                { id: '4', subject: 'Drums', location: 'Liverpool', price: 35, spaces: 5, icon: 'fa-drum' },
-                { id: '5', subject: 'Singing', location: 'Leeds', price: 30, spaces: 5, icon: 'fa-microphone' },
-                { id: '6', subject: 'Saxophone', location: 'Bristol', price: 55, spaces: 5, icon: 'fa-saxophone' },
-                { id: '7', subject: 'Flute', location: 'Glasgow', price: 38, spaces: 5, icon: 'fa-flute' },
-                { id: '8', subject: 'Trumpet', location: 'Edinburgh', price: 42, spaces: 5, icon: 'fa-trumpet' },
-                { id: '9', subject: 'Cello', location: 'Cardiff', price: 48, spaces: 5, icon: 'fa-cello' },
-                { id: '10', subject: 'Clarinet', location: 'Belfast', price: 36, spaces: 5, icon: 'fa-clarinet' }
-            ];
         },
         
         // Search lessons (Backend implementation)
