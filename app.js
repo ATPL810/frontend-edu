@@ -129,7 +129,7 @@ const app = new Vue({
                         cartId: Date.now() + Math.random()
                     });
                     // this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
-                    // lesson.spaces--;
+                    lesson.spaces--;
                 }
             }
         },
