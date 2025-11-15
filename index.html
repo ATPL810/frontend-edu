@@ -132,7 +132,8 @@
                                 <div class="cart-item-info">
                                     <div style="font-weight: bold;">{{ item.subject }}</div>
                                     <div>Location: {{ item.location }} - ${{ item.price }}</div>
-                                    <div>Quantity: {{ item.quantity }}</div> <!-- ← Show quantity -->
+                                    <!-- Shows quantity if there are multiple also  -->
+                                    <div>Quantity: {{ item.quantity }}</div> 
                                     <div>Subtotal: ${{ item.price * item.quantity }}</div>
                                 </div>
                                 <button class="remove-btn" v-on:click="removeFromCart(item.cartId)">
