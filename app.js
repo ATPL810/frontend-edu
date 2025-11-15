@@ -120,8 +120,6 @@ const app = new Vue({
                     // Increases the quantity if already in cart
                     if (lesson.spaces > 0) {
                         existingItem.quantity += 1;
-                        this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
-                        lesson.spaces--;
                     }
                 } else {
                     // Adds new item to cart with quantity 1
@@ -140,14 +138,14 @@ const app = new Vue({
         removeFromCart(cartId) {
             const index = this.cart.findIndex(item => item.cartId === cartId);
             if (index !== -1) {
-                const cartItem = this.cart[index];
-                const lesson = this.lessons.find(l => l.id === cartItem.id);
+                // const cartItem = this.cart[index];
+                // const lesson = this.lessons.find(l => l.id === cartItem.id);
                 
-                if (lesson) {
-                    // Return ALL quantities back to available spaces
-                    this.updateLessonSpaces(lesson.id, lesson.spaces + cartItem.quantity);
-                    lesson.spaces += cartItem.quantity;
-                }
+                // if (lesson) {
+                //     // Return ALL quantities back to available spaces
+                //     this.updateLessonSpaces(lesson.id, lesson.spaces + cartItem.quantity);
+                //     lesson.spaces += cartItem.quantity;
+                // }
                 this.cart.splice(index, 1);
             }
         },
@@ -188,7 +186,7 @@ const app = new Vue({
                         quantity: item.quantity
                     })),
                     total: this.cartTotal,
-                    orderDate: new Date().toISOString()
+                    // orderDate: new Date().toISOString()
                 };
                 
                 const response = await fetch(`${this.backendUrl}/api/orders`, {
@@ -212,6 +210,8 @@ const app = new Vue({
                 this.cart = [];
                 this.checkoutData = { name: '', phone: '', email: '' };
                 
+                this.fetchLessons(); // Refresh lessons to update spaces
+
                 setTimeout(() => {
                     this.orderSubmitted = false;
                     this.navigateTo('lessons');
