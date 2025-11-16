@@ -216,6 +216,14 @@
                         </div>
                     </div>
                 </div>
+                <!-- Order Processing Overlay -->
+                <div v-if="isProcessingOrder" class="order-processing-overlay">
+                    <div class="processing-message">
+                        <div class="spinner"></div>
+                        <h3>Order is being successfully processed</h3>
+                        <p>Please wait while we confirm your order...</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

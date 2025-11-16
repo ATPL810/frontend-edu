@@ -19,6 +19,7 @@ const app = new Vue({
         },
         orderSubmitted: false,
         isLoading: true,
+        isProcessingOrder: false,
         backendUrl: 'https://courses-bookings.onrender.com' // Update with backend URL
     },
     
@@ -202,8 +203,7 @@ const app = new Vue({
                         image: item.image,
                         quantity: item.quantity
                     })),
-                    total: this.cartTotal,
-                    // orderDate: new Date().toISOString()
+                    total: this.cartTotal
                 };
                 
                 const response = await fetch(`${this.backendUrl}/api/orders`, {
@@ -223,18 +223,22 @@ const app = new Vue({
                 console.log('Order successful:', result);
 
                 // Success handling
+                this.isProcessingOrder = false;
                 this.orderSubmitted = true;
                 this.cart = [];
                 this.checkoutData = { name: '', phone: '', email: '' };
                 
+                // refresh lessons and redirect(update the spaces)
                 this.fetchLessons(); // Refresh lessons to update spaces
 
                 setTimeout(() => {
                     this.orderSubmitted = false;
                     this.navigateTo('lessons');
                     this.fetchLessons(); // Refresh to see updated spaces
-                }, 3000);
+                }, 2500);
+
             } catch (error) {
+                this.isProcessingOrder = false;
                 console.error('Error submitting order:', error);
                 alert('Error submitting order. Please try again.');
             }
