@@ -248,7 +248,7 @@ const app = new Vue({
                     setTimeout(() => {
                         this.orderSubmitted = false;
                         this.navigateTo('lessons');
-                    }, 1500);
+                    }, 1000);
                     
                 }, 2000); // Show processing popup for 2 seconds
 
