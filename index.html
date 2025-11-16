@@ -24,7 +24,7 @@
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'lessons' }"
-                        v-on:click="refreshCourses">
+                        v-on:click="navigateTo('lessons')">
                         Courses
                     </button>
                     <!-- shows the number of items in the cart -->
