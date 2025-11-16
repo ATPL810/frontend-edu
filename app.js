@@ -223,7 +223,7 @@ const app = new Vue({
                 console.log('Order successful:', result);
 
                 // Success handling
-                this.isProcessingOrder = false;
+                this.isProcessingOrder = true;
                 this.orderSubmitted = true;
                 this.cart = [];
                 this.checkoutData = { name: '', phone: '', email: '' };
