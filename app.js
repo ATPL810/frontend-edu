@@ -236,7 +236,7 @@ const app = new Vue({
                setTimeout(() => {
                     this.isProcessingOrder = false;
                     this.orderSubmitted = true;
-                    
+
                     //this clears the cart after the order is submitted
                     this.cart = [];
                     this.checkoutData = { name: '', phone: '', email: '' };
@@ -248,7 +248,7 @@ const app = new Vue({
                     setTimeout(() => {
                         this.orderSubmitted = false;
                         this.navigateTo('lessons');
-                    }, 2500);
+                    }, 1500);
                     
                 }, 2000); // Show processing popup for 2 seconds
 
