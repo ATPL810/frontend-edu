@@ -431,54 +431,89 @@ body {
         grid-template-columns: 1fr;
     }
 
-    /* Order Processing Overlay */
-    .order-processing-overlay {
+    /* Order Processing Popup with Blur Effect */
+    .order-processing-popup {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000;
     }
 
-    .processing-message {
+    .popup-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .popup-content {
+        position: relative;
         background: white;
-        padding: 30px;
-        border-radius: 10px;
+        padding: 50px 40px;
+        border-radius: 20px;
         text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-width: 400px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 450px;
         width: 90%;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .processing-message h3 {
-        color: #27ae60;
-        margin-bottom: 10px;
+    .popup-content h3 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+        font-weight: 600;
     }
 
-    .processing-message p {
-        color: #666;
-        margin-bottom: 20px;
+    .popup-content p {
+        color: #7f8c8d;
+        margin-bottom: 30px;
+        font-size: 1.1em;
+        line-height: 1.5;
     }
 
-    /* Spinner Animation */
+    /* Enhanced Spinner */
     .spinner {
-        border: 4px solid #f3f3f3;
+        border: 4px solid rgba(52, 152, 219, 0.2);
         border-top: 4px solid #3498db;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 2s linear infinite;
-        margin: 0 auto 20px;
+        width: 60px;
+        height: 60px;
+        animation: spin 1.5s linear infinite;
+        margin: 0 auto 30px;
+    }
+
+    /* Animations */
+    @keyframes popIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
     }
 
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+
+    /* Optional: Add blur to the main content when popup is active */
+    .order-processing-popup ~ .container {
+        filter: blur(2px);
+        transition: filter 0.3s ease;
     }
     
     .cart-item {

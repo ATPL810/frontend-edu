@@ -192,6 +192,15 @@ const app = new Vue({
             if (!this.isCheckoutValid) return;
             
             try {
+
+                 // Show processing popup
+                this.isProcessingOrder = true;
+                console.log('🔄 Order processing popup shown');
+                
+                // Ensure DOM updates and popup renders
+                await this.$nextTick();
+                await new Promise(resolve => setTimeout(resolve, 100));
+
                 const orderData = {
                     name: this.checkoutData.name,
                     phone: this.checkoutData.phone,
@@ -222,20 +231,22 @@ const app = new Vue({
                 const result = await response.json();
                 console.log('Order successful:', result);
 
-                // Success handling
-                this.isProcessingOrder = true;
-                this.orderSubmitted = true;
-                this.cart = [];
-                this.checkoutData = { name: '', phone: '', email: '' };
-                
-                // refresh lessons and redirect(update the spaces)
-                this.fetchLessons(); // Refresh lessons to update spaces
-
-                setTimeout(() => {
-                    this.orderSubmitted = false;
-                    this.navigateTo('lessons');
-                    this.fetchLessons(); // Refresh to see updated spaces
-                }, 2500);
+               setTimeout(() => {
+                    this.isProcessingOrder = false;
+                    this.orderSubmitted = true;
+                    this.cart = [];
+                    this.checkoutData = { name: '', phone: '', email: '' };
+                    
+                    // Refresh lessons to get updated spaces
+                    this.fetchLessons();
+                    
+                    // Redirect after showing success message
+                    setTimeout(() => {
+                        this.orderSubmitted = false;
+                        this.navigateTo('lessons');
+                    }, 2500);
+                    
+                }, 2000); // Show processing popup for 2 seconds
 
             } catch (error) {
                 this.isProcessingOrder = false;

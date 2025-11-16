@@ -216,9 +216,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- Order Processing Overlay -->
-                <div v-if="isProcessingOrder" class="order-processing-overlay">
-                    <div class="processing-message">
+                <!-- Order Processing Popup -->
+                <div v-if="isProcessingOrder" class="order-processing-popup">
+                    <div class="popup-backdrop"></div>
+                    <div class="popup-content">
                         <div class="spinner"></div>
                         <h3>Order is being successfully processed</h3>
                         <p>Please wait while we confirm your order...</p>
