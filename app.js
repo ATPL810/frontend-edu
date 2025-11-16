@@ -189,10 +189,12 @@ const app = new Vue({
         
         // Submit order to backend
         async submitOrder() {
-            if (!this.isCheckoutValid) return;
+            // this does not let submission in case the form is invalid
+            if (!this.isCheckoutValid){ 
+                alert("Please fill out the form correctly.");
+                return};
             
             try {
-
                  // Show processing popup
                 this.isProcessingOrder = true;
                 console.log('🔄 Order processing popup shown');
@@ -234,6 +236,8 @@ const app = new Vue({
                setTimeout(() => {
                     this.isProcessingOrder = false;
                     this.orderSubmitted = true;
+                    
+                    //this clears the cart after the order is submitted
                     this.cart = [];
                     this.checkoutData = { name: '', phone: '', email: '' };
                     

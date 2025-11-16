@@ -412,26 +412,10 @@ body {
     color: #7f8c8d;
     font-size: 1.1em;
 }
+    
 
-@media (max-width: 768px) {
-    .navigation {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .search-sort-container {
-        justify-content: center;
-    }
-    
-    .search-box {
-        width: 100%;
-    }
-    
-    .lesson-grid {
-        grid-template-columns: 1fr;
-    }
 
-    /* Order Processing Popup with Blur Effect */
+    /* Order Processing Popup form */
     .order-processing-popup {
         position: fixed;
         top: 0;
@@ -508,14 +492,28 @@ body {
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
-    }
+    }    
 
-    /* Optional: Add blur to the main content when popup is active */
-    .order-processing-popup ~ .container {
-        filter: blur(2px);
-        transition: filter 0.3s ease;
+
+
+
+@media (max-width: 768px) {
+    .navigation {
+        flex-direction: column;
+        align-items: stretch;
     }
     
+    .search-sort-container {
+        justify-content: center;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .lesson-grid {
+        grid-template-columns: 1fr;
+    }
     .cart-item {
         flex-direction: column;
         align-items: flex-start;
