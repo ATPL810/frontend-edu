@@ -1,9 +1,3 @@
-
-window.ethereum = window.ethereum || {
-  request: () => Promise.reject(new Error('MetaMask not available')),
-  on: () => {} // dummy event listener
-};
-
 const app = new Vue({
     el: '#app',
     data: {
@@ -76,6 +70,21 @@ const app = new Vue({
     },
     
     methods: {
+        // Refreshing the course page
+        refreshCourses() {
+            if (this.currentView !== 'lessons') {
+                this.fetchLessons();
+                this.seaarchQuery = '';
+                this.searchResults = [];
+            }else{
+                this.navigateTo('lessons');
+            }
+        },
+        clearSearch() {
+            this.searchQuery = '';
+            this.searchResults = [];
+        },
+
         // Fetch all lessons from backend
         async fetchLessons() {
             try {
@@ -94,7 +103,7 @@ const app = new Vue({
             }
         },
         
-        // Search lessons (Backend implementation)
+        // Searching in lessons (Backend implementation)
         async handleSearch() {
             if (!this.searchQuery.trim()) {
                 this.searchResults = [];

@@ -24,7 +24,7 @@
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'lessons' }"
-                        v-on:click="navigateTo('lessons')">
+                        v-on:click="refreshCourses">
                         Courses
                     </button>
                     <!-- shows the number of items in the cart -->
@@ -37,13 +37,22 @@
                     </button>
                 </div>
 
-                <div class="search-sort-container">
-                    <input 
-                        type="text" 
-                        class="search-box" 
-                        placeholder="Search courses..."
-                        v-model="searchQuery"
-                        v-on:input="handleSearch">
+                <div class="search-sort-container" v-if="currentView === 'lessons'">
+                    <div class="search-wrapper">
+                        <input 
+                            type="text" 
+                            class="search-box" 
+                            placeholder="Search courses..."
+                            v-model="searchQuery"
+                            v-on:input="handleSearch">
+                        
+                        <button
+                            v-if="searchQuery"
+                            class="clear-search-btn"
+                            v-on:click="clearSearch">
+                            ×
+                        </button>    
+                    </div>
 
                     <div class="sort-controls">
                         <label for="sortSelect">Sort by:</label>
@@ -57,8 +66,9 @@
                             {{ sortOrder === 'asc' ? 'Asc' : 'Desc' }}
                         </button>
                     </div>
-                </div>
+                </div>   
             </div>
+        
 
             <div class="main-content">
                 <div v-if="isLoading && currentView === 'lessons'" class="loading">
@@ -79,7 +89,7 @@
                                 <img 
                                     :src="lesson.imageUrl" 
                                     :alt="lesson.subject"
-                                    :title="lesson.subject + ' course image'"
+                                    :title="lesson.subject + 'course image'"
                                     :onerror="`this.src='${backendUrl}/images/default.jpg'`">
                             </div>
                             

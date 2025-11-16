@@ -92,6 +92,40 @@ body {
     border-color: #3498db;
 }
 
+.search-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.clear-search-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ccc;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.clear-search-btn:hover {
+    background: #999;
+    color: white;
+}
+
+/* Adjust search box to accommodate clear button */
+.search-box {
+    padding: 12px 35px 12px 12px; /* Extra right padding for clear button */
+    width: 300px;
+}
+
 .sort-controls {
     display: flex;
     gap: 10px;
