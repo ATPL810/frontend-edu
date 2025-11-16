@@ -1,3 +1,9 @@
+
+window.ethereum = window.ethereum || {
+  request: () => Promise.reject(new Error('MetaMask not available')),
+  on: () => {} // dummy event listener
+};
+
 const app = new Vue({
     el: '#app',
     data: {
