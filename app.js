@@ -87,34 +87,49 @@ const app = new Vue({
         },
 
         // Fetch all lessons from backend
-        async fetchLessons() {
-            try {
-                this.isLoading = true;
-                const response = await fetch(`${this.backendUrl}/api/lessons`);
-                const lessons = await response.json();
-                this.lessons = lessons.map(lesson => ({
-                    ...lesson,
-                    id: lesson._id || lesson.id
-                }));
-            } catch (error) {
-                console.error('Error fetching lessons:', error);
-                alert('Error loading courses. Please check if backend is running.');
-            } finally {
-                this.isLoading = false;
-            }
+        fetchLessons() {
+            this.isLoading = true;
+            
+            fetch(`${this.backendUrl}/api/lessons`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(lessons => {
+                    this.lessons = lessons.map(lesson => ({
+                        ...lesson,
+                        id: lesson._id || lesson.id
+                    }));
+                })
+                .catch(error => {
+                    console.error('Error fetching lessons:', error);
+                    alert('Error loading courses. Please check if backend is running.');
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
         },
         
         // Searching in lessons (Backend implementation)
-        async handleSearch() {
+        handleSearch() {
             if (!this.searchQuery.trim()) {
                 this.searchResults = [];
                 return;
             }
             
-            try {
-                const response = await fetch(`${this.backendUrl}/api/search?q=${encodeURIComponent(this.searchQuery)}`);
-                this.searchResults = await response.json();
-            } catch (error) {
+            fetch(`${this.backendUrl}/api/search?q=${encodeURIComponent(this.searchQuery)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Search request failed');
+                    }
+                    return response.json();
+                })
+                .then(searchResults => {
+                    this.searchResults = searchResults;
+                })
+                .catch(error => {
                 console.error('Search error:', error);
                 // Fallback to frontend search
                 this.searchResults = this.lessons.filter(lesson => 
@@ -123,7 +138,7 @@ const app = new Vue({
                     lesson.price.toString().includes(this.searchQuery) ||
                     lesson.spaces.toString().includes(this.searchQuery)
                 );
-            }
+            });
         },
         
         // Adds lesson to cart with v-on
