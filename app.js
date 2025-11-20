@@ -152,8 +152,7 @@ const app = new Vue({
                     if (lesson.spaces > 0) {
                         existingItem.quantity += 1;
                         // updates only in the frontend
-                        this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
-                        //lesson.spaces--;
+                        lesson.spaces--;
                     }
                 } else {
                     // Adds new item to cart with quantity 1
@@ -162,8 +161,7 @@ const app = new Vue({
                         quantity: 1,  
                         cartId: Date.now() + Math.random()
                     });
-                     this.updateLessonSpaces(lesson.id, lesson.spaces - 1);
-                   // lesson.spaces--;
+                   lesson.spaces--;
                 }
             }
         },
