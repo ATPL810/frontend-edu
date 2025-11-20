@@ -183,39 +183,40 @@ const app = new Vue({
         },
         
         // Update lesson spaces in backend
-        async updateLessonSpaces(lessonId, newSpaces) {
-            try {
-                const response = await fetch(`${this.backendUrl}/api/lessons/${lessonId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ spaces: newSpaces })
-                });
-                
+        updateLessonSpaces(lessonId, newSpaces) {
+            fetch(`${this.backendUrl}/api/lessons/${lessonId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ spaces: newSpaces })
+            })
+
+            .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to update spaces');
                 }
-            } catch (error) {
+                return response.json();
+            })
+            
+            .catch(error => {
                 console.error('Error updating spaces:', error);
-            }
+            });
         },
         
         // Submit order to backend
-        async submitOrder() {
-            // this does not let submission in case the form is invalid
-            if (!this.isCheckoutValid){ 
-                alert("Please fill out the form correctly.");
-                return};
+        submitOrder(event) {
+            // Prevent default form submission
+            if (event) event.preventDefault();
             
-            try {
-                 // Show processing popup
-                this.isProcessingOrder = true;
-                console.log('🔄 Order processing popup shown');
-                
-                // Ensure DOM updates and popup renders
-                await this.$nextTick();
-                await new Promise(resolve => setTimeout(resolve, 100));
+            if (!this.isCheckoutValid) {
+                alert('Please fill in all required fields correctly.');
+                return;
+            }
+            
+            // Show processing popup
+            this.isProcessingOrder = true;
+            console.log('🔄 Order processing popup shown');
 
                 const orderData = {
                     name: this.checkoutData.name,
@@ -231,20 +232,23 @@ const app = new Vue({
                     total: this.cartTotal
                 };
                 
-                const response = await fetch(`${this.backendUrl}/api/orders`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
-                
+                //Sending the order data to the backend
+                 fetch(`${this.backendUrl}/api/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || `HTTP ${response.status}`);
+                    return response.json().then(errorData => {
+                        throw new Error(errorData.error || `HTTP ${response.status}`);
+                    });
                 }
-
-                const result = await response.json();
+                return response.json();
+            })
+            .then(result => {
                 console.log('Order successful:', result);
 
                setTimeout(() => {
@@ -266,11 +270,12 @@ const app = new Vue({
                     
                 }, 2000); // Show processing popup for 2 seconds
 
-            } catch (error) {
+            })
+            .catch(error => {
                 this.isProcessingOrder = false;
                 console.error('Error submitting order:', error);
                 alert('Error submitting order. Please try again.');
-            }
+            });
         },
         
         // Navigation methods
