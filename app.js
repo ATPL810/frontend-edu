@@ -216,7 +216,7 @@ const app = new Vue({
             
             // Show processing popup
             this.isProcessingOrder = true;
-            console.log('🔄 Order processing popup shown');
+            console.log(' Order processing popup shown');
 
                 const orderData = {
                     name: this.checkoutData.name,
