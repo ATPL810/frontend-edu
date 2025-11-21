@@ -20,7 +20,7 @@ const app = new Vue({
         orderSubmitted: false,
         isLoading: true,
         isProcessingOrder: false,
-        backendUrl: 'https://courses-bookings.onrender.com' // Update with backend URL
+        backendUrl: 'https://courses-1n06.onrender.com' // Update with backend URL
     },
     
     computed: {
