@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url('../image/school.png');
+    background-image: url('image/school.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
