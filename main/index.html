@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Booking System</title>
+    <!-- Provides vector icons that are used in the web application -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <!--Uses the Vue 2 CDN according to the CW requirements -->
+    <!-- Links the css file -->
+    <link rel="stylesheet" href="../styles/styles.css">
+    <!--Uses Vue2 according to the CW requirement -->
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
     
 </head>
@@ -20,14 +22,14 @@
 
             <div class="navigation">
                 <div class="nav-buttons">
-                    <!-- lessons view button -->
+                    <!-- Below lessons view button(Courses) -->
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'lessons' }"
                         v-on:click="navigateTo('lessons')">
                         Courses
                     </button>
-                    <!-- shows the number of items in the cart -->
+                    <!-- Below shows the number of items in the cart (Cart)-->
                     <button 
                         class="nav-btn" 
                         :class="{ active: currentView === 'cart' }"
@@ -39,13 +41,14 @@
 
                 <div class="search-sort-container" v-if="currentView === 'lessons'">
                     <div class="search-wrapper">
+                     <!-- Here the search consists the search as you type functionality by v-on and manages inputs by v-model -->
                         <input 
                             type="text" 
                             class="search-box" 
                             placeholder="Search courses..."
                             v-model="searchQuery"
                             v-on:input="handleSearch">
-                        
+                         <!-- This button clears the search input -->
                         <button
                             v-if="searchQuery"
                             class="clear-search-btn"
@@ -54,6 +57,7 @@
                         </button>    
                     </div>
 
+                    <!-- Below are the sort controls which filters by each fields and order -->
                     <div class="sort-controls">
                         <label for="sortSelect">Sort by:</label>
                         <select id="sortSelect" class="sort-select" v-model="sortBy">
@@ -71,6 +75,7 @@
         
 
             <div class="main-content">
+                <!-- Waits until the data is loaded from backend, meanwhile it shows a loading progress -->
                 <div v-if="isLoading && currentView === 'lessons'" class="loading">
                     Loading courses...
                 </div>
@@ -83,6 +88,7 @@
                     </div>
 
                     <div v-else class="lesson-grid">
+                        <!-- This is the section where a course is being displayed -->
                         <div v-for="lesson in displayedLessons" :key="lesson.id" class="lesson-card">
                             <!-- Course Image being dynamically served from backend -->
                             <div class="lesson-image">
@@ -93,6 +99,7 @@
                                     :onerror="`this.src='${backendUrl}/images/default.jpg'`">
                             </div>
                             
+                            <!-- The details of the course is presented below -->
                             <h3 class="lesson-subject">{{ lesson.subject }}</h3>
                             
                             <div class="lesson-detail">
@@ -114,7 +121,7 @@
                                 <i class="fas fa-info-circle"></i>
                                 <span class="description">{{ lesson.description }}</span>
                             </div>
-
+                            <!-- The add to cart button is responsive until there are no spaces left and shows sold out -->
                             <button 
                                 class="add-to-cart-btn"
                                 v-on:click="addToCart(lesson)"
@@ -125,7 +132,7 @@
                     </div>
                 </div>
 
-                <!-- Cart View -->
+                <!-- Cart View section consisting of shopping cart and checkout -->
                 <div v-else-if="currentView === 'cart'">
                     <h2>Your Shopping Cart</h2>
                     
@@ -135,6 +142,7 @@
 
                     <div v-else>
                         <div class="cart-container">
+                            <!-- This shows the course selected in the shopping cart-->
                             <div v-for="(item, index) in cart" :key="item.cartId" class="cart-item">
                                 <!-- Dynamically returns the image in the cart -->
                                 <div class="cart-item-image">
@@ -152,11 +160,12 @@
                                 </button>
                             </div>
                         </div>
-
+                        <!-- It displays the total cost of the items in the cart -->
                         <div class="total-section">
                             Total: ${{ cartTotal }}
                         </div>
 
+                        <!-- Below displays the checkout form for user to fill in their details to order -->
                         <div class="checkout-form">
                             <h3>Checkout Information</h3>
                             
@@ -165,6 +174,8 @@
                                 <p>Thank you for your order. You will be redirected to courses page shortly.</p>
                             </div>
 
+                            <!-- The submit.prevent acts as a v-on but prevents the cart from reloading thus enabling all the fields in checkout to be filled -->
+                             <!-- It is provides smoothness in the app and makes the checkout professional -->
                             <div v-else @submit.prevent="submitOrder">
                                 <div class="form-group">
                                     <label for="name">Full Name *</label>
@@ -196,6 +207,7 @@
                                     </div>
                                 </div>
 
+                                <!--  The email is optional, just to make it look professional -->
                                 <div class="form-group">
                                     <label for="email">Email Address</label>
                                     <input 
@@ -217,6 +229,7 @@
                     </div>
                 </div>
                 <!-- Order Processing Popup -->
+                <!-- Professional user experience! -->
                 <div v-if="isProcessingOrder" class="order-processing-popup">
                     <div class="popup-backdrop"></div>
                     <div class="popup-content">
@@ -228,7 +241,7 @@
             </div>
         </div>
     </div>
-
-    <script src="app.js"></script>
+    <!-- Loads the Vue javascript file -->
+    <script src="../javascript/app.js"></script>
 </body>
 </html>

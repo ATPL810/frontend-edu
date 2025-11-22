@@ -1,5 +1,6 @@
 const app = new Vue({
     el: '#app',
+    //consists all the data properties used in the application and UI state
     data: {
         lessons: [],
         cart: [],
@@ -20,7 +21,8 @@ const app = new Vue({
         orderSubmitted: false,
         isLoading: true,
         isProcessingOrder: false,
-        backendUrl: 'https://courses-1n06.onrender.com' // Update with backend URL
+        //Below is the backend URL which links to the deployed backend server to frontend and fetches data 
+        backendUrl: 'https://courses-1n06.onrender.com' 
     },
     
     computed: {
@@ -71,25 +73,10 @@ const app = new Vue({
     },
     
     methods: {
-        // Refreshing the course page
-        refreshCourses() {
-            if (this.currentView !== 'lessons') {
-                this.fetchLessons();
-                this.seaarchQuery = '';
-                this.searchResults = [];
-            }else{
-                this.navigateTo('lessons');
-            }
-        },
-        clearSearch() {
-            this.searchQuery = '';
-            this.searchResults = [];
-        },
-
         // Fetch all lessons from backend
         fetchLessons() {
             this.isLoading = true;
-            
+            // fetches lessons from backend API for all available lessons(courses)
             fetch(`${this.backendUrl}/api/lessons`)
                 .then(response => {
                     if (!response.ok) {
@@ -111,6 +98,12 @@ const app = new Vue({
                     this.isLoading = false;
                 });
         },
+
+        // Clear search input and results
+        clearSearch() {
+            this.searchQuery = '';
+            this.searchResults = [];
+        },
         
         // Searching in lessons (Backend implementation)
         handleSearch() {
@@ -118,7 +111,7 @@ const app = new Vue({
                 this.searchResults = [];
                 return;
             }
-            
+            //fetches search results from backend with the search query
             fetch(`${this.backendUrl}/api/search?q=${encodeURIComponent(this.searchQuery)}`)
                 .then(response => {
                     if (!response.ok) {
@@ -131,13 +124,6 @@ const app = new Vue({
                 })
                 .catch(error => {
                 console.error('Search error:', error);
-                // Fallback to frontend search
-                this.searchResults = this.lessons.filter(lesson => 
-                    lesson.subject.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    lesson.location.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                    lesson.price.toString().includes(this.searchQuery) ||
-                    lesson.spaces.toString().includes(this.searchQuery)
-                );
             });
         },
         
@@ -184,6 +170,7 @@ const app = new Vue({
         
         // Update lesson spaces in backend
         updateLessonSpaces(lessonId, newSpaces) {
+            //fetch lesson by ID and update spaces
             fetch(`${this.backendUrl}/api/lessons/${lessonId}`, {
                 method: 'PUT',
                 headers: {
