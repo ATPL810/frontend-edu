@@ -6,7 +6,7 @@ The App uses the Vue.js(Vue2) framework for which the app.js fetches every corre
 
 The Frontend is deployed through GitHub Pages in the Git repository of [https://github.com/ATPL810/frontend-edu]
 
-The link for the deployed frontend in the GitHub pages: [https://atpl810.github.io/frontend-edu]
+The link for the deployed frontend in the GitHub pages: [https://atpl810.github.io/frontend-edu/]
 
 The Frontend connects with the Backend through the backendUrl: [https://courses-1n06.onrender.com].
 
