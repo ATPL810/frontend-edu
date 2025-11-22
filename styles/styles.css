@@ -46,6 +46,12 @@ body {
     gap: 15px;
 }
 
+/* for the shopping cart */
+.nav-btn i{
+    margin-right: 4px;
+    font-size:1.0em;
+}
+
 .nav-btn {
     background: #3498db;
     color: white;
