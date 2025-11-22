@@ -19,7 +19,7 @@ In the Courses page, every lessons have an "Add to cart" button for which the us
 
 ## Search 
 
-The search bar is in the navigation bar for the courses page only. The search functionality will search according to those field names: subject, location, price, space, description. For every letter the user enters, the v-on activate for every strokes to fetch all those fields consisting of the letter entered, as the user types the word, the outcomes converges to the desired search(search as you type). The actual search is done in the backend for which every letters or words are fetched (GET) from the URL for which q is a parameter name for the search query. In the backend, MongoDB is searched using aggregate in the javascript route, which allows the search of the query in multiple fields at the same time and manages number variables as well, making the code efficient.
+The search bar is in the navigation bar for the courses page only. The search functionality will search according to those field names: subject, location, price, space, description. For every letter the user enters, the v-on activate for every strokes to fetch all those fields consisting of the letter entered, as the user types the word, the outcomes converges to the desired search(search as you type). Additionally When the user wants to erase the textbox, the cross icon must be clicked to clear all. The actual search is done in the backend for which every letters or words are fetched (GET) from the URL for which q is a parameter name for the search query. In the backend, MongoDB is searched using aggregate in the javascript route, which allows the search of the query in multiple fields at the same time and manages number variables as well, making the code efficient.
 
 ## Cart
 
