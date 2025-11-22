@@ -6,13 +6,20 @@ The App uses the Vue.js(Vue2) framework for which the app.js fetches every corre
 
 The Frontend is deployed through GitHub Pages in the Git repository of [https://github.com/ATPL810/frontend-edu]
 
+The link for the deployed frontend in the GitHub pages: [https://atpl810.github.io/frontend-edu]
+
 The Frontend connects with the Backend through the backendUrl: [https://courses-1n06.onrender.com].
+
 
 ## Courses page
 
 When the user enters the page, the courses(lesson list) will be displayed(using v-for) with the search bar which is search as you type(Real-time), the filter is by subject, location, price and spaces and all the fields are responsive to the ascending and descending order.
 
 In the Courses page, every lessons have an "Add to cart" button for which the user can choice, select their courses they want to learn and the number of available spaces will decrease(using v-on). when they select a course, the cart button will be activated with the selected couse(s). if the user has selected all spaces, the course will be visible but the button will be disabled and "Sold Out" message will be output.
+
+## Search 
+
+The search bar is in the navigation bar for the courses page only. The search functionality will search according to those field names: subject, location, price, space, description. For every letter the user enters, the v-on activate for every strokes to fetch all those fields consisting of the letter entered, as the user types the word, the outcomes converges to the desired search(search as you type). The actual search is done in the backend for which every letters or words are fetched (GET) from the URL for which q is a parameter name for the search query. In the backend, MongoDB is searched using aggregate in the javascript route, which allows the search of the query in multiple fields at the same time and manages number variables as well, making the code efficient.
 
 ## Cart
 
