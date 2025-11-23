@@ -1,5 +1,11 @@
 # Frontend of the Course Booking System
 
+Student Name: Aayush Tridevrai Pratapsingh Lochun
+Student Number: M01004726
+
+
+
+
 The Project is a responsive course booking system built with Vue.js that allows any user to browse(search) lessons(Courses), add courses to cart, sort courses according to their field and also completing orders/purchases with a pleasant checkout experience.
 
 The App uses the Vue.js(Vue2) framework for which the app.js fetches every corresponding URL(via fetch) using promises(.then, .catch) to connect to the backend (deployed on render.com).
