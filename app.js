@@ -249,13 +249,13 @@ const app = new Vue({
                     // Refresh lessons to get updated spaces
                     this.fetchLessons();
                     
-                    // Redirect after showing success message
+                    // Redirects  to courses page after showing success message
                     setTimeout(() => {
                         this.orderSubmitted = false;
                         this.navigateTo('lessons');
                     }, 1000);
-                    
-                }, 2000); // Show processing popup for 2 seconds
+                 // Shows the processing popup for 2 seconds   
+                }, 2000); 
 
             })
             .catch(error => {
