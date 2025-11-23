@@ -160,7 +160,7 @@ const app = new Vue({
                 const lesson = this.lessons.find(l => l.id === cartItem.id);
                 
                 if (lesson) {
-                    // Return ALL quantities back to available spaces
+                    // Return ALL quantities back to available spaces using PUT
                     this.updateLessonSpaces(lesson.id, lesson.spaces + cartItem.quantity);
                     lesson.spaces += cartItem.quantity;
                 }
