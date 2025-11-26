@@ -28,11 +28,14 @@ const app = new Vue({
     computed: {
         // Sort lessons based on selected criteria
         sortedLessons() {
+            //Chooses between search results and all lessons for sorting
             const lessonsToSort = this.searchQuery && this.searchResults.length > 0 
                 ? this.searchResults 
                 : this.lessons;
             
+             //this copies the array so that the original stays intact if any changes are made
             return [...lessonsToSort].sort((a, b) => {
+                // the values to compare based on sortBy which is subject
                 let aValue = a[this.sortBy];
                 let bValue = b[this.sortBy];
                 
@@ -41,10 +44,12 @@ const app = new Vue({
                     aValue = Number(aValue);
                     bValue = Number(bValue);
                 }
-                
+                //Determines sort order(-1)
                 if (this.sortOrder === 'asc') {
+                    //if aValue is greater than bValue, put a after b
                     return aValue > bValue ? 1 : -1;
                 } else {
+                    // if aValue is less than bValue, put a after b
                     return aValue < bValue ? 1 : -1;
                 }
             });
@@ -64,7 +69,7 @@ const app = new Vue({
             return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
         },
         
-        // Check if checkout form is valid
+        // Check if checkout form is valid through regular expressions(regex)
         isCheckoutValid() {
             const nameValid = /^[A-Za-z\s]+$/.test(this.checkoutData.name);
             const phoneValid = /^\d+$/.test(this.checkoutData.phone);
@@ -84,6 +89,8 @@ const app = new Vue({
                     }
                     return response.json();
                 })
+                //map creates a new array with standardized lesson IDs
+                // ...(spread operator) copies all properties of the lesson object thus facilitating handling of arrays with different ID naming conventions
                 .then(lessons => {
                     this.lessons = lessons.map(lesson => ({
                         ...lesson,
@@ -99,7 +106,7 @@ const app = new Vue({
                 });
         },
 
-        // Clear search input and results
+        // Clear search input and results for the search bar clear button
         clearSearch() {
             this.searchQuery = '';
             this.searchResults = [];
@@ -119,6 +126,7 @@ const app = new Vue({
                     }
                     return response.json();
                 })
+                //Search results are stored in searchResults array from backend to display in UI
                 .then(searchResults => {
                     this.searchResults = searchResults;
                 })
@@ -130,7 +138,7 @@ const app = new Vue({
         // Adds lesson to cart with v-on
         addToCart(lesson) {
             if (lesson.spaces > 0) {
-                // Checks if the lesson already exists in cart
+                // Checks if the lesson already exists in cart 
                 const existingItem = this.cart.find(item => item.id === lesson.id);
                 
                 if (existingItem) {
@@ -154,9 +162,11 @@ const app = new Vue({
         
         // Remove item from cart with v-on
         removeFromCart(cartId) {
+            // finds the index(place)  of the item to be removed
             const index = this.cart.findIndex(item => item.cartId === cartId);
             if (index !== -1) {
                 const cartItem = this.cart[index];
+                // Find the corresponding lesson to update spaces
                 const lesson = this.lessons.find(l => l.id === cartItem.id);
                 
                 if (lesson) {
